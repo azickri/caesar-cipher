@@ -106,14 +106,7 @@
       if (!textValue) return;
 
       const typeValue = document.querySelector('input[name="type"]:checked')?.value || 'encrypt';
-      if (typeValue == 'decrypt') {
-        decryptString(keyValue, textValue);
-      } else {
-        encryptString(keyValue, textValue);
-      }
-    }
 
-    function encryptString(keyValue, textValue) {
       const serializedKey = keyValue.replace(/[^0-9]/g, '');
       const result = { value: '', key: keyValue, substractIndex: 0 };
 
@@ -139,56 +132,18 @@
 
             let value = ''
 
-            if (index + key > alphabets.length) {
-              value = alphabets[(index + key) % alphabets.length];
+            if (typeValue == 'encrypt') {
+              if (index + key > alphabets.length) {
+                value = alphabets[(index + key) % alphabets.length];
+              } else {
+                value = alphabets[index + key];
+              }
             } else {
-              value = alphabets[index + key];
-            }
-
-            if (alphabet == alphabet.toUpperCase()) {
-              value = value.toUpperCase()
-            }
-
-            result.value += value;
-          }
-        } else {
-          result.value += alphabet;
-        }
-      }
-
-      document.getElementById('result').innerHTML = result.value;
-    }
-
-    function decryptString(keyValue, textValue) {
-      const serializedKey = keyValue.replace(/[^0-9]/g, '');
-      const result = { value: '', key: keyValue, substractIndex: 0 };
-
-      for (let i = 0; i < textValue.length; i++) {
-        const alphabet = textValue[i];
-
-        if (alphabet == ' ') {
-          result.substractIndex += 1
-        }
-
-        if (alphabet == '\n') {
-          result.value += '<br/>'
-          result.substractIndex += 1
-        }
-
-        if (alphabet) {
-          const index = alphabets.findIndex((item) => item == alphabet.toLowerCase());
-          if (index == -1) {
-            result.value += alphabet;
-          } else {
-            const keys = serializedKey.split('');
-            const key = Number(keys[(i - result.substractIndex) % keys.length]);
-
-            let value = ''
-
-            if (index - key < 0) {
-              value = alphabets[(index - key) + alphabets.length];
-            } else {
-              value = alphabets[index - key];
+              if (index - key < 0) {
+                value = alphabets[(index - key) + alphabets.length];
+              } else {
+                value = alphabets[index - key];
+              }
             }
 
             if (alphabet == alphabet.toUpperCase()) {
