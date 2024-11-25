@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caesar Cipher</title>
+
+  <style>
+    .width-responsive {
+      width: 20%;
+    }
+
+    @media screen and (max-width: 992px) {
+      .width-responsive {
+        width: 50%;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .width-responsive {
+        width: 85%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div
+    style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin: auto; margin-top: 20px;">
+    <div class='width-responsive'>
+      <div>
+        Caesar Cipher
+        <a href="https://en.wikipedia.org/wiki/Caesar_cipher" target='_blank'>(Wikipedia)</a>
+      </div>
+
+      <div style='margin-top: 20px;'>
+        <div><label for="key">Tipe</label></div>
+
+        <div style='margin-top: 5px;'>
+          <input type="radio" id="encrypt" name="type" value="encrypt">
+          <label for="encrypt">Enkrip</label>
+
+          <input type="radio" id="decrypt" name="type" value="decrypt">
+          <label for="decrypt">Dekrip</label>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px">
+        <div><label for="key">Key</label></div>
+        <input type="text" id="key" style="width: 100%; margin-top: 5px;" placeholder='Kunci Angka' />
+      </div>
+
+      <div style="margin-top: 20px">
+        <div><label for="text">Text</label></div>
+        <textarea name="text" id="text" rows="10" style="width: 100%; margin-top: 5px;"
+          placeholder='Text untuk di enkripsi/dekripsi'></textarea>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; justify-content: right">
+        <button onclick="handleGenerate()">Generate!</button>
+      </div>
+
+      <div style="margin-top: 50px">
+        <div><label for="result">Hasil:</label></div>
+        <div id="result" style='word-wrap: break-word; margin-top: 10px;'></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const alphabets = [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o',
+      'p',
+      'q',
+      'r',
+      's',
+      't',
+      'u',
+      'v',
+      'w',
+      'x',
+      'y',
+      'z',
+    ];
+
+    function handleGenerate() {
+      const keyValue = document.getElementById('key').value;
+      if (!keyValue) return;
+
+      const textValue = document.getElementById('text').value;
+      if (!textValue) return;
+
+      const typeValue = document.querySelector('input[name="type"]:checked')?.value || 'encrypt';
+      if (typeValue == 'decrypt') {
+        decryptString(keyValue, textValue);
+      } else {
+        encryptString(keyValue, textValue);
+      }
+    }
+
+    function encryptString(keyValue, textValue) {
+      const serializedKey = keyValue.replace(/[^0-9]/g, '');
+      const result = { value: '', key: keyValue, substractIndex: 0 };
+
+      for (let i = 0; i < textValue.length; i++) {
+        const alphabet = textValue[i];
+
+        if (alphabet == ' ') {
+          result.substractIndex += 1
+        }
+
+        if (alphabet == '\n') {
+          result.value += '<br/>'
+          result.substractIndex += 1
+        }
+
+        if (alphabet) {
+          const index = alphabets.findIndex((item) => item == alphabet.toLowerCase());
+          if (index == -1) {
+            result.value += alphabet;
+          } else {
+            const keys = serializedKey.split('');
+            const key = Number(keys[(i - result.substractIndex) % keys.length]);
+
+            let value = ''
+
+            if (index + key > alphabets.length) {
+              value = alphabets[(index + key) % alphabets.length];
+            } else {
+              value = alphabets[index + key];
+            }
+
+            if (alphabet == alphabet.toUpperCase()) {
+              value = value.toUpperCase()
+            }
+
+            result.value += value;
+          }
+        } else {
+          result.value += alphabet;
+        }
+      }
+
+      document.getElementById('result').innerHTML = result.value;
+    }
+
+    function decryptString(keyValue, textValue) {
+      const serializedKey = keyValue.replace(/[^0-9]/g, '');
+      const result = { value: '', key: keyValue, substractIndex: 0 };
+
+      for (let i = 0; i < textValue.length; i++) {
+        const alphabet = textValue[i];
+
+        if (alphabet == ' ') {
+          result.substractIndex += 1
+        }
+
+        if (alphabet == '\n') {
+          result.value += '<br/>'
+          result.substractIndex += 1
+        }
+
+        if (alphabet) {
+          const index = alphabets.findIndex((item) => item == alphabet.toLowerCase());
+          if (index == -1) {
+            result.value += alphabet;
+          } else {
+            const keys = serializedKey.split('');
+            const key = Number(keys[(i - result.substractIndex) % keys.length]);
+
+            let value = ''
+
+            if (index - key < 0) {
+              value = alphabets[(index - key) + alphabets.length];
+            } else {
+              value = alphabets[index - key];
+            }
+
+            if (alphabet == alphabet.toUpperCase()) {
+              value = value.toUpperCase()
+            }
+
+            result.value += value;
+          }
+        } else {
+          result.value += alphabet;
+        }
+      }
+
+      document.getElementById('result').innerHTML = result.value;
+    }
+  </script>
+</body>
+
+</html>
