@@ -66,6 +66,11 @@
         <div id="result" style='word-wrap: break-word; margin-top: 10px;'></div>
       </div>
     </div>
+
+    <div>
+      <button onclick="handlePrintHTML()"">Print HTML</button>
+      <button onclick="handlePrintAndroid()">PrintAndroid</button>
+    </div>
   </div>
 
   <script>
@@ -158,6 +163,14 @@
       }
 
       document.getElementById('result').innerHTML = result.value;
+    }
+    
+    function handlePrintHTML() {
+      window.print()
+    }
+
+    function handlePrintAndroid() {
+      window.prompt("PRINT_REQUEST");
     }
   </script>
 </body>
